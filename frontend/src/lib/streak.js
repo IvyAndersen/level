@@ -22,6 +22,7 @@ import { todayISO, weekStartOf } from './format.js'
 import { isOn } from './modules.js'
 import { streakWalk } from '../../../api/game/core/streak.js'
 import { LAUNCH } from '../../../api/game/core/rules.js'
+import { countedWorkouts } from '../../../api/game/core/xp.js'
 
 export { FREEZE_EVERY, FREEZE_MAX, STREAK_BADGES, STREAK_MIN } from '../../../api/game/core/rules.js'
 
@@ -36,8 +37,11 @@ export { FREEZE_EVERY, FREEZE_MAX, STREAK_BADGES, STREAK_MIN } from '../../../ap
  *   toNextFreeze  counting weeks still needed for the next freeze (0 when the bank is full)
  */
 export function streakInfo (S, today = todayISO()) {
-  const days = (Array.isArray(S?.workouts) ? S.workouts : []).map(w => w?.d)
-  return streakWalk(days, { today, ws: weekStartOf(S), since: isOn(S, 'game') ? LAUNCH : null })
+  // With the game on, the streak is the game's: from the launch day, sessions with done work only
+  // (the same ones that earn XP). Off, every logged workout counts, as the streak always did.
+  const game = isOn(S, 'game')
+  const days = game ? countedWorkouts(S, LAUNCH).map(w => w.d) : (Array.isArray(S?.workouts) ? S.workouts : []).map(w => w?.d)
+  return streakWalk(days, { today, ws: weekStartOf(S), since: game ? LAUNCH : null })
 }
 
 /** Just the number, as Home, Stats, the report and the widgets show it. */

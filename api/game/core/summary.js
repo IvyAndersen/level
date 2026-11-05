@@ -4,7 +4,7 @@ import { LAUNCH, MONDAY, SUNDAY } from './rules.js';
 import { weekKeyOf } from './week.js';
 import { levelOf } from './levels.js';
 import { streakWalk } from './streak.js';
-import { scoreWorkouts } from './xp.js';
+import { scoreWorkouts, countedWorkouts } from './xp.js';
 import { unlockedAchievements } from './achievements.js';
 
 /**
@@ -22,7 +22,8 @@ export function gameSummary(S, { today, seenDayOf = () => null, launch = LAUNCH 
     const k = weekKeyOf(w.d, MONDAY);
     weekXp[k] = (weekXp[k] || 0) + w.xp;
   }
-  const days = (Array.isArray(P.workouts) ? P.workouts : []).map(w => w?.d);
+  // Only sessions with done work count for the streak, like they do for XP and the badges.
+  const days = countedWorkouts(P, launch).map(w => w.d);
   const streak = streakWalk(days, { today, ws: P.weekStart === SUNDAY ? SUNDAY : MONDAY, since: launch });
   return {
     xp,

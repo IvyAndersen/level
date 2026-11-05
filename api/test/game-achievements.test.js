@@ -95,6 +95,14 @@ test('gameSummary: XP, level, Monday-keyed week XP, the profile-week streak', ()
   assert.ok(sum.achievements.some(a => a.id === 'workouts-1'));
 });
 
+test('gameSummary: sessions with no done work do not count for the streak', () => {
+  const empty = d => ({ id: 'e' + d + Math.random(), d, entries: [] });
+  const warm = d => ({ id: 'w' + d + Math.random(), d, entries: [{ id: 'x', sets: [{ w: 20, r: 5, done: true, phase: 'warmup' }] }] });
+  const sum = gameSummary({ workouts: [empty('2026-11-17'), warm('2026-11-17'), empty('2026-11-18')] }, { today: '2026-11-24', launch: L });
+  assert.equal(sum.xp, 0);
+  assert.equal(sum.streak.best, 0);
+});
+
 test('gameSummary on an empty or broken profile', () => {
   for (const S of [{}, { workouts: null }, null]) {
     const sum = gameSummary(S, { today: '2026-11-24', launch: L });

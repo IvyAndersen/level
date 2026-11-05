@@ -25,15 +25,18 @@ test('updateSeen: a new ledger trusts every workout already there; later ones ge
   assert.equal(next.ledger.seen.a, '2026-10-01');
   const same = updateSeen(next.ledger, [{ id: 'a', d: '2026-10-01' }, { id: 'b', d: '2026-11-01' }], '2026-11-21');
   assert.equal(same.changed, false);
+  // A workout deleted and later restored (a reset, then a backup) keeps the day it was first seen.
   const gone = updateSeen(next.ledger, [{ id: 'a', d: '2026-10-01' }], '2026-11-21');
-  assert.equal('b' in gone.ledger.seen, false);
-  assert.equal(gone.changed, true);
+  assert.equal(gone.ledger.seen.b, '2026-11-20');
+  assert.equal(gone.changed, false);
+  const back = updateSeen(updateSeen(gone.ledger, [], '2026-11-25').ledger, [{ id: 'b', d: '2026-11-01' }], '2026-11-30');
+  assert.equal(back.ledger.seen.b, '2026-11-20');
   assert.equal(updateSeen(null, null, '2026-11-20').ledger.v, 1);
 });
 
 test('isListed: off with the hide switch or the module off', () => {
   assert.equal(isListed({}), true);
-  assert.equal(isListed(null), true);
+  assert.equal(isListed(null), false); // an account that never synced has nothing to show
   assert.equal(isListed({ gameHidden: true }), false);
   assert.equal(isListed({ modules: { game: false } }), false);
 });

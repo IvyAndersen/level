@@ -151,6 +151,13 @@ describe('streakInfo: three a week, from the launch day', () => {
     const before = [day(TODAY, -7), day(TODAY, -6), day(TODAY, -5)]
     expect(streakInfo(raw(before), TODAY).current).toBe(0)
   })
+  it('with the game on, a session with nothing done does not count', () => {
+    const after = ['2026-11-17', '2026-11-18', '2026-11-19']
+    const work = d => ({ id: 'k' + d, d, entries: [{ id: 'x', sets: [{ w: 10, r: 5, done: true }] }] })
+    const empty = d => ({ id: 'n' + d, d, entries: [] })
+    expect(streakInfo({ weekStart: 1, workouts: after.map(work) }, '2026-11-24').current).toBe(1)
+    expect(streakInfo({ weekStart: 1, workouts: after.map(empty) }, '2026-11-24').current).toBe(0)
+  })
   it('reports how many workouts this week has so far', () => {
     expect(streakInfo(raw([TODAY, TODAY], { modules: { game: false } }), TODAY).thisWeekCount).toBe(2)
   })

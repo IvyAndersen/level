@@ -5,7 +5,9 @@
 // THE LEDGER (DATA_DIR/game-seen-<uid>.json, { v: 1, seen: { workoutId: 'YYYY-MM-DD' } }): the
 // day the server first saw each workout, for the backdating rule (a workout first seen more than
 // BACKDATE_DAYS after its day earns no XP). A new ledger trusts what is already there, so going
-// live never marks anyone's history as backdated.
+// live never marks anyone's history as backdated. Ids are never dropped: a workout deleted and
+// later restored (a reset, then a backup) keeps the day it was first seen, and an entry is a
+// few bytes.
 //
 // WHAT A ROW SAYS: name, level, XP, streak, achievement ids, and whether it is you. Nothing else of
 // anyone's state ever leaves through here.
@@ -19,20 +21,18 @@ const isMap = v => !!v && typeof v === 'object' && !Array.isArray(v);
 export function updateSeen(ledger, workouts, todayISO) {
   const fresh = !isMap(ledger) || !isMap(ledger.seen);
   const was = fresh ? {} : ledger.seen;
-  const seen = {};
+  const seen = { ...was };
   let changed = fresh;
   for (const w of Array.isArray(workouts) ? workouts : []) {
     if (!isMap(w) || w.id == null) continue;
     const id = String(w.id);
-    if (typeof was[id] === 'string') seen[id] = was[id];
-    else { seen[id] = fresh && typeof w.d === 'string' ? w.d : todayISO; changed = true; }
+    if (typeof seen[id] !== 'string') { seen[id] = fresh && typeof w.d === 'string' ? w.d : todayISO; changed = true; }
   }
-  if (!fresh && Object.keys(was).some(id => !(id in seen))) changed = true;
   return { ledger: { v: 1, seen }, changed };
 }
 
-/** Whether a profile shows on the board: not hidden, game module not off. */
-export const isListed = S => !(S?.gameHidden === true || S?.modules?.game === false);
+/** Whether a profile shows on the board: it has synced, is not hidden, and has the game module on. */
+export const isListed = S => isMap(S) && S.gameHidden !== true && S.modules?.game !== false;
 
 /**
  * Rows for `users` ([{ id, name, S, ledger }]), best first: [{ name, level, xp, streak, achievements, me }].
