@@ -102,6 +102,7 @@ import { queueRemaining, pinState } from './lib/queue.js'
 import { DAY_NOTE_TAGS, DAY_NOTE_LABEL, DAY_NOTE_ICON, dayNoteOf, dayNoteLine, canNoteDay, withDayNote } from './lib/day-notes.js'
 import { isOn } from './lib/modules.js'
 import { planKindOf } from './lib/game.js'
+import GameFinish from './components/GameFinish.jsx'
 
 const S = () => useStore.getState().S
 const update = (...a) => useStore.getState().update(...a)
@@ -4032,6 +4033,8 @@ function FinishSummary({ w, prs, e1prs = [], additions = [], close }) {
       {prs.map(id => <div key={id} className="small accent row" style={{ gap: 6, alignItems: 'flex-start' }}><Icon name="trophy" style={{ fontSize: 'var(--fs-footnote)', marginTop: 2, flex: 'none' }} /><span>{t('New PR:')} <span className={exerciseNameClass(EXIDX[id])}>{EXIDX[id] ? exerciseNameFor(EXIDX[id]) : id}</span></span></div>)}
       {e1prs.map(p => <div key={p.id} className="small accent row" style={{ gap: 6, alignItems: 'flex-start' }}><Icon name="chartLine" style={{ fontSize: 'var(--fs-footnote)', marginTop: 2, flex: 'none' }} /><span>{t('Best estimated 1RM:')} <span className={exerciseNameClass(EXIDX[p.id])}>{EXIDX[p.id] ? exerciseNameFor(EXIDX[p.id]) : p.id}</span> · {fmtNum(p.est)} {st.unit}</span></div>)}
     </div>}
+    {/* The game's line (components/GameFinish.jsx): XP earned, the level bar, a new level or badge. */}
+    <GameFinish S={st} w={w} />
     {/* Done is one tap away right under the numbers: the body map, what's next and the photo
         corner sit below it for whoever wants them, nobody has to scroll to leave (Discord). */}
     <div className="fin-actions">

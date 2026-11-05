@@ -10,6 +10,7 @@ import { bwSheet, goalSheet, dayOverrideSheet, calendarSheet, startFlow, starter
 import LineChart from '../components/LineChart.jsx'
 import Icon from '../components/Icon.jsx'
 import CardHead from '../components/CardHead.jsx'
+import GameCard from '../components/GameCard.jsx'
 import QueueRow from '../components/QueueRow.jsx'
 import MiniBodyMap from '../components/MiniBodyMap.jsx'
 import { queueOf, queueView, weekTally, pinState } from '../lib/queue.js'
@@ -260,6 +261,9 @@ export default function Home() {
         <Button size="sm" variant="ghost" icon="target" className="bw-goal" style={{ marginTop: 6, ...(S.targetW ? { color: 'var(--gold-ink)' } : {}) }} onClick={goalSheet}>{S.targetW ? fmtNum(S.targetW) : t('Goal')}</Button>
       </>}
     </div>}
+
+    {/* The game (lib/game.js): level and the bar to the next, one tap from /game. */}
+    <GameCard S={S} />
 
     {/* The streak opens its calendar from its text (CardHead open); the weekly-sets line and the
         party banner are buttons of their own beside it, not inside a card that is a button. */}

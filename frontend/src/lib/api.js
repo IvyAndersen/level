@@ -434,3 +434,6 @@ export async function passwordRegister(name, password, code, email) {
 export async function passwordResetRedeem(name, code, next) {
   return (await post('/api/login/password-reset', { name, code, next })).user
 }
+
+/** The instance's game leaderboard (api/game/leaderboard.js): `period` is 'week' or 'all'. */
+export const getLeaderboard = period => api('/api/game/leaderboard?period=' + encodeURIComponent(period))

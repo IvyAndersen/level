@@ -7,9 +7,11 @@
 // and on each finished workout: `gplan` (planned / extra / free, decided at finish against the
 // plan of that day) and `loggedAt` (when it was saved, for the backdating rule).
 import { isOn } from './modules.js'
-import { todayISO, isoOf } from './format.js'
+import { todayISO, isoOf, fmtNum } from './format.js'
 import { effectiveRoutineIds } from './history.js'
 import { gameSummary } from '../../../api/game/core/summary.js'
+import { LB_KG } from './units.js'
+import { t } from './i18n.js'
 
 export const gameOn = S => isOn(S, 'game')
 export const gameHidden = S => S?.gameHidden === true || !gameOn(S)
@@ -57,3 +59,18 @@ export function gameCelebration(S, sum) {
 
 /** What S.gameSeen becomes once `sum` was shown. */
 export const seenOf = sum => ({ level: sum.level.level, ach: sum.achievements.map(a => a.id) })
+
+/**
+ * An achievement's name and line in the profile's unit: thresholds in kg become round pounds
+ * for a lb profile (100 kg → 220 lb), so nobody reads "100 kg" against bars they load in lb.
+ */
+export function achievementCopy(a, unit = 'kg') {
+  const w = kg => (unit === 'lb' ? `${fmtNum(Math.round(kg / LB_KG / 5) * 5)} lb` : `${fmtNum(kg)} kg`)
+  if (a.group === 'lift') {
+    const name = a.lift === 'bench' ? t('Bench press {0}', w(a.kg)) : a.lift === 'squat' ? t('Squat {0}', w(a.kg)) : t('Deadlift {0}', w(a.kg))
+    return { title: name, desc: t('Lift {0} for at least one rep.', w(a.kg)) }
+  }
+  if (a.group === 'volume') return { title: t(a.title), desc: a.week ? t('Move {0} in one week.', w(a.kg)) : t('Move {0} in one workout.', w(a.kg)) }
+  if (a.group === 'streak') return { title: t('{0} week streak', a.n), desc: t('Train 3 times a week, {0} weeks in a row.', a.n) }
+  return { title: t(a.title), desc: t(a.desc) }
+}
