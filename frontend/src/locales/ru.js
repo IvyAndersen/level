@@ -3656,4 +3656,8 @@ export default {
   "Your webhooks stop sending while Integrations is off. They stay set up.": "Пока «Интеграции» выключены, твои вебхуки ничего не отправляют. Они остаются настроенными.",
   "{0} of {1} modules on.": "Включено модулей: {0} из {1}.",
   "{0} stops syncing while Health is off. Nothing is disconnected, and it catches up once Health is back.": "Пока «Здоровье» выключено, {0} не синхронизируется. Ничего не отключается, и всё догонится, когда «Здоровье» вернётся.",
+  "One more week with 3 workouts earns a freeze.": "Ещё неделя с 3 тренировками, и будет заморозка.",
+  "{0} more weeks with 3 workouts earn a freeze.": { one: "Ещё {0} неделя с 3 тренировками, и будет заморозка.", few: "Ещё {0} недели с 3 тренировками, и будет заморозка.", many: "Ещё {0} недель с 3 тренировками, и будет заморозка.", other: "Ещё {0} недели с 3 тренировками, и будет заморозка." },
+  "This week counts: {0} workouts.": "This week counts: {0} workouts.",
+  "This week: {0} of 3 workouts.": "This week: {0} of 3 workouts.",
 }

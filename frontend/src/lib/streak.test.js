@@ -7,7 +7,10 @@ const TODAY = '2026-10-28'
 const day = (iso, n) => { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return isoOf(d) }
 // One workout on the Wednesday `weeksAgo` weeks back, for each of them.
 const weeks = (...weeksAgo) => weeksAgo.map(n => ({ id: 'w' + n, d: day(TODAY, -7 * n) }))
-const S = (workouts, over = {}) => ({ workouts, weekStart: 1, ...over })
+// A week counts at 3 workouts (STREAK_MIN): each fixture workout is logged three times that day, so
+// the walk's mechanics are tested as before. The game module is off so the launch day does not
+// hide these past dates (the launch-day cut has its own test below).
+const S = (workouts, over = {}) => ({ workouts: workouts.flatMap(w => (w && typeof w === 'object' ? [w, { ...w }, { ...w }] : [w])), weekStart: 1, modules: { game: false }, ...over })
 
 describe('streakInfo: the run', () => {
   it('is all zero without workouts', () => {
@@ -125,15 +128,30 @@ describe('streakCelebration', () => {
     expect(c).toEqual({ kind: 'badge', weeks: 12, seen: { badge: 12, wk: '2026-10-26' } })
     expect(streakCelebration({ streakSeen: c.seen }, info(12), { done: 3, planned: 3 })).toBeNull()
   })
-  it('celebrates the week once its plan is all trained', () => {
+  it('celebrates the week once it has its 3 workouts, whatever the plan says', () => {
     const i = info(2)
-    expect(streakCelebration({ streakSeen: { badge: 0 } }, i, { done: 1, planned: 3 })).toBeNull()
+    expect(streakCelebration({ streakSeen: { badge: 0 } }, i, { done: 1, planned: 3 })).toMatchObject({ kind: 'week', weeks: 2 })
     expect(streakCelebration({ streakSeen: { badge: 0 } }, i, { done: 3, planned: 3 })).toMatchObject({ kind: 'week', weeks: 2 })
-    // without a plan, the first workout of the week is the week done
     expect(streakCelebration({ streakSeen: { badge: 0 } }, i, { done: 1, planned: 0 })).toMatchObject({ kind: 'week' })
     expect(streakCelebration({ streakSeen: { badge: 0, wk: '2026-10-26' } }, i, { done: 3, planned: 3 })).toBeNull()
   })
   it('says nothing for a week not trained yet', () => {
     expect(streakCelebration({ streakSeen: { badge: 0 } }, info(3, false), { done: 0, planned: 3 })).toBeNull()
+  })
+})
+
+describe('streakInfo: three a week, from the launch day', () => {
+  const raw = (days, over = {}) => ({ workouts: days.map((d, i) => ({ id: 'x' + i, d })), weekStart: 1, ...over })
+  it('a week with 2 workouts does not count, 3 does', () => {
+    const two = [day(TODAY, -7), day(TODAY, -6)]
+    expect(streakInfo(raw(two, { modules: { game: false } }), TODAY).current).toBe(0)
+    expect(streakInfo(raw([...two, day(TODAY, -5)], { modules: { game: false } }), TODAY).current).toBe(1)
+  })
+  it('with the game on, workouts before its launch day are not counted', () => {
+    const before = [day(TODAY, -7), day(TODAY, -6), day(TODAY, -5)]
+    expect(streakInfo(raw(before), TODAY).current).toBe(0)
+  })
+  it('reports how many workouts this week has so far', () => {
+    expect(streakInfo(raw([TODAY, TODAY], { modules: { game: false } }), TODAY).thisWeekCount).toBe(2)
   })
 })

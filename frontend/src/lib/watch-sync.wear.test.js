@@ -41,14 +41,18 @@ describe('the snapshot the Wear OS watch parses', () => {
   it('is the fixture its Kotlin test reads', () => {
     const snap = buildSnapshot(state(), { timer: { endsAt: 1761743000000 }, activeAt: 1761742950000 })
     snap.settings = { health: false, restHaptics: true, crown: 'reps', show: { hr: true, last: true, next: true }, lang: 'de', weighIn: false }
-    snap.streak = streakFor(state(), '2026-10-29')
+    // The Kotlin test reads a one-week streak: the fixture's workout three times makes that week count (3 a week).
+    snap.streak = streakFor({ ...state(), modules: { game: false }, workouts: state().workouts.flatMap(w => [w, w, w]) }, '2026-10-29')
     const file = join(fixtures, 'snapshot.json')
     if (process.env.UPDATE_WEAR_FIXTURES) writeFileSync(file, JSON.stringify(snap, null, 2) + '\n')
     expect(JSON.parse(readFileSync(file, 'utf8'))).toEqual(JSON.parse(JSON.stringify(snap)))
   })
 
   it('carries the week streak for the Tile', () => {
-    expect(streakFor(state(), '2026-10-29')).toEqual({ weeks: 1, thisWeekDone: false })
+    // A week counts at 3 workouts (lib/streak.js): the fixture's workout, three times over.
+    const three = s => ({ ...s, modules: { game: false }, workouts: s.workouts.flatMap(w => [w, w, w]) })
+    expect(streakFor(three(state()), '2026-10-29')).toEqual({ weeks: 1, thisWeekDone: false })
+    expect(streakFor({ ...state(), modules: { game: false } }, '2026-10-29')).toEqual({ weeks: 0, thisWeekDone: false })
     expect(streakFor({ workouts: [] })).toEqual({ weeks: 0, thisWeekDone: false })
     expect(streakFor(null)).toEqual({ weeks: 0, thisWeekDone: false })
   })

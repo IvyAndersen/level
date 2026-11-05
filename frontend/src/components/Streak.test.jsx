@@ -64,7 +64,7 @@ describe('Stats card', () => {
     expect(bar.querySelector('i').style.getPropertyValue('--p')).toBe('0.5')
     expect(el.textContent).toContain('13 / 26')
     expect(el.textContent).toContain('Next badge at 26 weeks.')
-    expect(el.textContent).toContain('3 more weeks with a workout earn a freeze.')
+    expect(el.textContent).toContain('3 more weeks with 3 workouts earn a freeze.')
   })
 
   it('has no bar once every badge is collected', () => {

@@ -111,7 +111,7 @@ export function StreakBadges ({ info }) {
 export function StreakCard ({ info }) {
   const hint = info.freezes >= FREEZE_MAX
     ? t('Freezes full. A missed week uses one, no harm done.')
-    : tn('One more week with a workout earns a freeze.', '{0} more weeks with a workout earn a freeze.', info.toNextFreeze)
+    : tn('One more week with 3 workouts earns a freeze.', '{0} more weeks with 3 workouts earn a freeze.', info.toNextFreeze)
   const nextLine = info.next ? t('Next badge at {0} weeks.', info.next) : t('Every badge collected. Legend.')
   return <div className="card streak-card" data-streak-card>
     <div className="row between" style={{ alignItems: 'flex-start' }}>
@@ -133,6 +133,9 @@ export function StreakCard ({ info }) {
         </div>
       </div>
       : null}
+    {info.thisWeekCount != null && <div className="muted small streak-week" data-streak-week>{info.thisWeekDone
+      ? t('This week counts: {0} workouts.', info.thisWeekCount)
+      : t('This week: {0} of 3 workouts.', info.thisWeekCount)}</div>}
     <div className="muted small streak-hint">{info.next ? '' : nextLine + ' '}{hint}</div>
   </div>
 }

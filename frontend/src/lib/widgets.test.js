@@ -89,8 +89,10 @@ describe('buildWidgetSnapshot: the configurable widget\'s blocks', () => {
   const wk = (d, extra = {}) => ({ id: 'w' + d, d, end: 1, entries: [], ...extra })
   it('carries the streak with its best run, freezes and whether this week is done', () => {
     // Mondays: 09-14, 09-21, 09-28, 10-05 trained (a freeze), 10-12 trained (this week)
-    const ws = ['2026-09-16', '2026-09-23', '2026-09-30', '2026-10-07', '2026-10-13'].map(d => wk(d))
-    const snap = buildWidgetSnapshot(S({ workouts: ws }), { today: TODAY })
+    // Three workouts a week make it count (lib/streak.js); the game module is off so the launch
+    // day does not cut these dates.
+    const ws = ['2026-09-16', '2026-09-23', '2026-09-30', '2026-10-07', '2026-10-13'].flatMap(d => [wk(d), wk(d), wk(d)])
+    const snap = buildWidgetSnapshot(S({ workouts: ws, modules: { game: false } }), { today: TODAY })
     expect(snap.streak).toBe(5)
     expect(snap.streakInfo).toMatchObject({ current: 5, best: 5, freezes: 1, weekDone: true, next: 12 })
     expect(snap.streakInfo.line).toMatch(/5/)

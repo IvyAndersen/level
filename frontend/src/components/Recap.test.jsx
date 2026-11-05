@@ -25,7 +25,8 @@ beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] })
   vi.setSystemTime(new Date('2026-10-26T09:00:00'))   // a Monday
   useUI.setState({ sheets: [] })
-  useStore.setState({ S: { ...structuredClone(DEF), weekStart: 1, workouts: [wk('2026-10-20'), wk('2026-10-22')] }, user: null })
+  // The game module is off so its launch day does not hide these dates from the streak.
+  useStore.setState({ S: { ...structuredClone(DEF), weekStart: 1, modules: { game: false }, workouts: [wk('2026-10-20'), wk('2026-10-22')] }, user: null })
 })
 afterEach(() => { act(() => { mounted.splice(0).forEach(r => r.unmount()) }); vi.useRealTimers() })
 
@@ -37,7 +38,8 @@ describe('Your week on Home', () => {
     act(() => host.querySelector('.recap-card .tap-main').click())
     const sheet = useUI.getState().sheets.at(-1)
     const sh = render(sheet.render(() => {}))
-    expect([...sh.querySelectorAll('.recap-v')].map(e => e.textContent)).toEqual(['2', '1,000 kg', '2', '1'])
+    // The last tile is the streak: two workouts make no counting week now that a week needs 3.
+    expect([...sh.querySelectorAll('.recap-v')].map(e => e.textContent)).toEqual(['2', '1,000 kg', '2', '0'])
     act(() => [...sh.querySelectorAll('button')].find(b => b.textContent.includes('Save as PDF')).click())
     expect(printReport).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ range: 'custom', from: '2026-10-19', to: '2026-10-25' }))
     act(() => host.querySelector('[aria-label="Put it away"]').click())

@@ -107,10 +107,13 @@ describe('the week streak counts the profile’s own weeks', () => {
   it('splits a Sun/Mon pair into two weeks for a Monday profile, one for a Sunday profile', () => {
     const sun = sundayBack()
     const mon = new Date(sun); mon.setDate(sun.getDate() + 1)
-    const workouts = [{ d: isoOf(sun) }, { d: isoOf(mon) }]
+    // A week counts at 3 workouts: two on the Sunday and one on the Monday make one week only
+    // when both days are in it. The game module is off so the launch day does not cut them.
+    const workouts = [{ d: isoOf(sun) }, { d: isoOf(sun) }, { d: isoOf(mon) }]
     expect(weekKey(isoOf(sun), MONDAY)).not.toBe(weekKey(isoOf(mon), MONDAY))
     expect(weekKey(isoOf(sun), SUNDAY)).toBe(weekKey(isoOf(mon), SUNDAY))
-    expect(streakWeeks({ workouts, weekStart: SUNDAY })).toBe(1)
+    expect(streakWeeks({ workouts, weekStart: SUNDAY, modules: { game: false } })).toBe(1)
+    expect(streakWeeks({ workouts, weekStart: MONDAY, modules: { game: false } })).toBe(0)
   })
 
   it('is zero without workouts whatever the week start', () => {

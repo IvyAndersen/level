@@ -3652,4 +3652,8 @@ export default {
   "Your webhooks stop sending while Integrations is off. They stay set up.": "\"इंटीग्रेशन\" बंद रहने तक आपके Webhook कुछ नहीं भेजते। वे सेट रहते हैं।",
   "{0} of {1} modules on.": "{1} में से {0} मॉड्यूल चालू।",
   "{0} stops syncing while Health is off. Nothing is disconnected, and it catches up once Health is back.": "\"सेहत\" बंद रहने तक {0} सिंक नहीं करता। कुछ भी डिस्कनेक्ट नहीं होता, और \"सेहत\" लौटते ही सब पकड़ लेता है।",
+  "One more week with 3 workouts earns a freeze.": "One more week with 3 workouts earns a freeze.",
+  "{0} more weeks with 3 workouts earn a freeze.": "{0} more weeks with 3 workouts earn a freeze.",
+  "This week counts: {0} workouts.": "This week counts: {0} workouts.",
+  "This week: {0} of 3 workouts.": "This week: {0} of 3 workouts.",
 }
