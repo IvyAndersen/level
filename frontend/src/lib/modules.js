@@ -40,6 +40,8 @@ export const MODULES = [
     desc: 'Apple Health or Health Connect, heart rate and recovery tips.' },
   { id: 'motivation', group: 'extras', icon: 'flame', tint: 'var(--orange)', title: 'Motivation',
     desc: 'Streaks, challenges, badges, recaps and your year in openGym.' },
+  { id: 'game', group: 'extras', icon: 'trophy', tint: 'var(--yellow)', title: 'Levels and leaderboard',
+    desc: 'Earn XP for training, unlock badges and see how your friends are doing.' },
   { id: 'coach', group: 'extras', icon: 'sparkles', tint: 'var(--green)', title: 'AI Coach',
     desc: 'Reviews your training and suggests changes. You still say yes or no.' },
   { id: 'integrations', group: 'extras', icon: 'webhook', tint: 'var(--indigo)', title: 'Integrations',

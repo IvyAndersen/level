@@ -101,6 +101,7 @@ import { copyText } from './lib/clipboard.js'
 import { queueRemaining, pinState } from './lib/queue.js'
 import { DAY_NOTE_TAGS, DAY_NOTE_LABEL, DAY_NOTE_ICON, dayNoteOf, dayNoteLine, canNoteDay, withDayNote } from './lib/day-notes.js'
 import { isOn } from './lib/modules.js'
+import { planKindOf } from './lib/game.js'
 
 const S = () => useStore.getState().S
 const update = (...a) => useStore.getState().update(...a)
@@ -4111,6 +4112,11 @@ function doFinishWorkout() {
     snapshotFor: e => isCustomEx(EXIDX[e.id]) ? exerciseMuscleSnapshot(EXIDX[e.id]) : null,
   })
   w.vol = workoutVolume(w)
+  // The game layer (lib/game.js): when it was saved, for the backdating rule, and, for a session
+  // done now, what it was against today's plan. Read before the workout lands, so a rotation's
+  // next session in line is still this one.
+  w.loggedAt = Date.now()
+  if (!past) w.gplan = planKindOf(st, w)
   // Read before the session is gone: the summary offers these to their routines (#592).
   const additions = past ? [] : routineAdditions(A, st.routines)
   let shown = w

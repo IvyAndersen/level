@@ -1023,6 +1023,11 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           subtitle={t('Three goals a month on Home, sized to how you train.')}>
           <Switch aria-label={t('Monthly challenges')} checked={S.monthlyChallenges !== false} onChange={v => update(s => { s.monthlyChallenges = v })} />
         </Row>}
+        {/* The game layer's privacy switch (lib/game.js): off the leaderboard, everything still earned. */}
+        {on('game') && <Row icon="lock" iconTint="var(--yellow)" title={t('Hide my activity')}
+          subtitle={t('Your level and badges stay yours. You won’t appear on the leaderboard.')}>
+          <Switch aria-label={t('Hide my activity')} checked={S.gameHidden === true} onChange={v => update(s => { s.gameHidden = v })} />
+        </Row>}
         {/* The bar at the top that says the app is offline, kept local, or not synced (#369, #330).
             Here and not under Server & sync, which a phone kept local never shows. Switching it on
             also brings back the no-server line its × hid (#454). */}

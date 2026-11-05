@@ -14,6 +14,7 @@ export const moduleCopy = () => ({
   body: [t('Body'), t('Weigh-ins, measurements, progress photos and your weight goal.')],
   health: [t('Health'), t('Apple Health or Health Connect, heart rate and recovery tips.')],
   motivation: [t('Motivation'), t('Streaks, challenges, badges, recaps and your year in openGym.')],
+  game: [t('Levels and leaderboard'), t('Earn XP for training, unlock badges and see how your friends are doing.')],
   coach: [t('AI Coach'), t('Reviews your training and suggests changes. You still say yes or no.')],
   integrations: [t('Integrations'), t('Webhooks for Home Assistant and friends, and the MCP server.')],
   seasonal: [t('Seasonal themes'), t('Halloween, Christmas and the advent calendar. Spooky, festive, optional.')],

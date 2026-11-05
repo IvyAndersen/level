@@ -3656,4 +3656,8 @@ export default {
   "{0} more weeks with 3 workouts earn a freeze.": { one: "Jeszcze {0} tydzień z 3 treningami i masz zamrożenie.", few: "Jeszcze {0} tygodnie z 3 treningami i masz zamrożenie.", many: "Jeszcze {0} tygodni z 3 treningami i masz zamrożenie.", other: "Jeszcze {0} tygodnia z 3 treningami i masz zamrożenie." },
   "This week counts: {0} workouts.": "This week counts: {0} workouts.",
   "This week: {0} of 3 workouts.": "This week: {0} of 3 workouts.",
+  "Levels and leaderboard": "Levels and leaderboard",
+  "Earn XP for training, unlock badges and see how your friends are doing.": "Earn XP for training, unlock badges and see how your friends are doing.",
+  "Hide my activity": "Hide my activity",
+  "Your level and badges stay yours. You won’t appear on the leaderboard.": "Your level and badges stay yours. You won’t appear on the leaderboard.",
 }

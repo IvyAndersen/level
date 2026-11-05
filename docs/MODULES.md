@@ -26,6 +26,7 @@ cannot be switched off.
 | **Body** | The body weight card on Home, the Body part of Stats (weight chart, goal, measurements, progress photos) and its Weight 30d figure, the weigh-in before a workout, the measurements and photos screens, the weight block of the widgets, the body weight settings. |
 | **Health** | The Apple Health and Health Connect pages and cards, the Works with list, live heart rate during a workout, recovery tips on Home. Syncing with the health app pauses (see below). |
 | **Motivation** | The streak card on Home and in Stats, monthly challenges and the trophy shelf, the week and month recap, Your year (its Home card, its Stats rows and its December notification), Share as image, the streak on the watch. With it off, Weekly sets on Home gets a small card of its own. |
+| **Levels and leaderboard** | XP and levels, the achievements, the Home card, the XP block on the finish summary, the Game page and the instance leaderboard, and the Hide my activity switch. With it off you are also off the leaderboard, and the streak counts your whole history instead of from the game's launch day. |
 | **AI Coach** | The Coach button on Plan, Ask the Coach in a workout, the Coach screens, its Settings row and Integrations card, scheduled reviews. |
 | **Integrations** | The Webhooks and MCP server cards and search hits. Webhooks pause (see below). Imports and the CSV export are core and stay. |
 | **Seasonal themes** | Halloween, Christmas and the advent calendar, their colours and decorations, the Seasonal themes page. |

@@ -3676,4 +3676,8 @@ export default {
   "{0} more weeks with 3 workouts earn a freeze.": "Noch {0} Wochen mit 3 Trainings, dann gibt es einen Freeze.",
   "This week counts: {0} workouts.": "Diese Woche zählt: {0} Trainings.",
   "This week: {0} of 3 workouts.": "Diese Woche: {0} von 3 Trainings.",
+  "Levels and leaderboard": "Level und Bestenliste",
+  "Earn XP for training, unlock badges and see how your friends are doing.": "Sammle XP fürs Training, schalte Abzeichen frei und sieh, wie es deinen Freunden geht.",
+  "Hide my activity": "Meine Aktivität verbergen",
+  "Your level and badges stay yours. You won’t appear on the leaderboard.": "Dein Level und deine Abzeichen bleiben bei dir. Du erscheinst nicht in der Bestenliste.",
 }
