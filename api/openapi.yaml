@@ -1963,6 +1963,47 @@ paths:
                   wid: { type: string, description: 'The write id (`_wid`) of the stored document; absent before its first write.' }
         '401': { $ref: '#/components/responses/Unauthorized' }
 
+  /api/game/leaderboard:
+    get:
+      tags: [data]
+      operationId: gameLeaderboard
+      summary: The instance's game leaderboard
+      description: |
+        Everyone on this server who has the Levels and leaderboard module on and has not hidden
+        their activity, scored by the server from their own data (XP from the game's launch day).
+        A row carries a name and game numbers only, never workouts or any other part of a profile.
+        `week` is the Monday-to-Sunday week on the server's clock; `all` is everything since launch.
+      parameters:
+        - name: period
+          in: query
+          required: false
+          schema: { type: string, enum: [week, all], default: week }
+      responses:
+        '200':
+          description: The board, best first.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  launch: { type: string, format: date, description: 'The game launch day.' }
+                  period: { type: string, enum: [week, all] }
+                  week: { type: string, format: date, description: 'The Monday the current week starts on.' }
+                  hidden: { type: boolean, description: 'Whether the caller is left off the board.' }
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name: { type: string }
+                        level: { type: integer }
+                        xp: { type: integer }
+                        streak: { type: integer, description: 'Weeks in a row with 3 workouts.' }
+                        achievements: { type: array, items: { type: string } }
+                        me: { type: boolean }
+        '400': { description: 'Unknown period.' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
   /api/nudge-check:
     get:
       tags: [data]

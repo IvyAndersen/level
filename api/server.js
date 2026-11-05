@@ -43,6 +43,9 @@ import { createIntegrations } from './integrations/index.js';
 import { integrationRoutes } from './integrations/routes.js';
 import { excusedOn, nudgeFor, nudgeWindowOpen, toneOf } from './nudge.js';
 import { wrappedPushYear, wrappedSummary, wrappedPushOwed, wrappedPush } from './wrapped.js';
+import { updateSeen, isListed, leaderboardRows } from './game/leaderboard.js';
+import { LAUNCH as GAME_LAUNCH } from './game/core/rules.js';
+import { isoOfDate, weekKeyOf } from './game/core/week.js';
 
 const PORT = +(process.env.PORT || 3000);
 const DATA = process.env.DATA_DIR || '/data';
@@ -194,6 +197,12 @@ function atomicWrite(file, content, mode) { durableWrite(file, content, mode); }
 // synced more writes ago than this merges on its next pull instead of taking the server's copy.
 const WID_KEEP = 50;
 const stateFile = uid => path.join(DATA, 'state-' + uid.replace(/[^a-zA-Z0-9_-]/g, '') + '.json');
+// The game's first-seen ledger of a profile (game/leaderboard.js): the day each workout id first
+// reached the server, for the backdating rule. Small, rewritten whole after a state write.
+const gameSeenFile = uid => path.join(DATA, 'game-seen-' + uid.replace(/[^a-zA-Z0-9_-]/g, '') + '.json');
+function readGameSeen(uid) {
+  try { return JSON.parse(fs.readFileSync(gameSeenFile(uid), 'utf8')); } catch { return null; }
+}
 // The watch relay's mailbox of a profile (watch-relay.js): the page's last snapshot and what its
 // Zepp OS watches sent. Small, rewritten whole like the state file.
 const watchFile = uid => path.join(DATA, 'watch-' + uid.replace(/[^a-zA-Z0-9_-]/g, '') + '.json');
@@ -2511,6 +2520,18 @@ const routes = {
   // note), `nudge` (whether the server's copy of the nudge rule, api/nudge.js, would still nudge
   // that day; a plan changed on another device moves it too) and the revision. Nothing of the
   // workouts themselves.
+  // The game's leaderboard (game/leaderboard.js): everyone on the instance who has not hidden
+  // themselves, scored by the server from their own state. A row is a name and game numbers only.
+  'GET /api/game/leaderboard': async (req, res) => {
+    const user = readSession(req);
+    if (!user) return json(res, 401, { error: 'not signed in' });
+    const period = new URL(req.url, 'http://x').searchParams.get('period') || 'week';
+    if (period !== 'week' && period !== 'all') return json(res, 400, { error: 'period must be week or all' });
+    const today = isoOfDate(new Date());
+    const users = db.users.filter(u => u && !u.disabled).map(u => ({ id: u.id, name: u.name, S: readStateCached(u.id), ledger: readGameSeen(u.id) }));
+    const me = users.find(u => u.id === user.id);
+    json(res, 200, { launch: GAME_LAUNCH, period, week: weekKeyOf(today, 1), hidden: !isListed(me?.S), rows: leaderboardRows(users, { period, today, meId: user.id }) });
+  },
   'GET /api/nudge-check': async (req, res) => {
     const user = readSession(req);
     if (!user) return json(res, 401, { error: 'not signed in' });
@@ -2624,6 +2645,11 @@ const routes = {
     // A finished workout, a record or a weigh-in the profile's integrations asked to hear about:
     // queued for delivery (integrations/outbox.js), never sent from inside this request.
     try { integrations.onStateWrite(user.id, cur, body.state); } catch (e) { console.error('integrations onStateWrite', e); }
+    // The game's first-seen ledger (game/leaderboard.js). Bookkeeping too: never an error here.
+    try {
+      const seen = updateSeen(readGameSeen(user.id), body.state.workouts, isoOfDate(new Date()));
+      if (seen.changed) atomicWrite(gameSeenFile(user.id), JSON.stringify(seen.ledger));
+    } catch (e) { console.error('game seen ledger', e); }
     json(res, 200, { ok: true, ts: body.state._ts || null, rev: curRev + 1, wid: body.state._wid });
   },
 
