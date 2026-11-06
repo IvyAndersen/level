@@ -6,7 +6,7 @@
 
 // The day the game starts on this instance. Workouts before it earn nothing and do not count for
 // the streak, so everyone starts at level 1 together. Set it to the go-live date before deploying.
-export const LAUNCH = '2026-11-16';
+export const LAUNCH = '2026-11-02';
 
 // XP for one workout.
 export const WORKOUT_XP = 100;

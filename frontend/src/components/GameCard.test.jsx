@@ -54,7 +54,7 @@ describe('GameFinish', () => {
     expect(el.textContent).toContain('Logged too long after the day, so no XP.')
   })
   it('says when the game starts for a workout before launch', () => {
-    const w = W('a', '2026-11-10')
+    const w = W('a', '2026-10-26')
     const el = render(<GameFinish S={state({ workouts: [w] })} w={w} />)
     expect(el.textContent).toMatch(/XP starts on/)
   })
