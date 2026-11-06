@@ -16,7 +16,7 @@ function VoiceShortcuts({ close }) {
     <h3>{voiceRowTitle()}</h3>
     {android
       ? <>
-        <div className="small muted" style={{ marginBottom: 10 }}>{t('Touch and hold the openGym icon. You can also drag a shortcut onto your home screen.')}</div>
+        <div className="small muted" style={{ marginBottom: 10 }}>{t('Touch and hold the Level icon. You can also drag a shortcut onto your home screen.')}</div>
         <Section>
           <Row icon="play" iconTint="var(--green)" title={t('Start workout')} subtitle={t('Starts what’s planned for today, or opens the one already running.')} />
           <Row icon="scale" iconTint="var(--green)" title={t('Log body weight')} />
