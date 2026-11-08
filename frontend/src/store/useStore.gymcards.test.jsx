@@ -144,11 +144,11 @@ describe('editing a card in place', () => {
   })
 })
 
-// The Settings switch. On by default; an older profile that predates the key must read as on
-// too, and off only hides the feature — the cards themselves survive the round trip.
+// The Settings switch. Level: off by default; off only hides the feature, and the cards
+// themselves survive the round trip.
 describe('checkIn switch', () => {
-  it('is on for a fresh profile', () => {
-    expect(useStore.getState().S.checkIn).toBe(true)
+  it('is off for a fresh profile', () => {
+    expect(useStore.getState().S.checkIn).toBe(false)
   })
 
   it('turning it off keeps the saved cards', () => {

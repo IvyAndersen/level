@@ -103,6 +103,7 @@ describe('Home: the streak card and check-in', () => {
     expect(calendarSheet).toHaveBeenCalledTimes(1)
   })
   it('check-in opens from its text, a real button', () => {
+    useStore.getState().update(s => { s.checkIn = true })
     const host = mount()
     const main = host.querySelector('.checkin-card .tap-main')
     expect(nameOf(main)).toBe('Check in')

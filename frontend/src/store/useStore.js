@@ -219,8 +219,9 @@ export const DEF = {
   lastGymCardId: null,
   // Whether the check-in feature is on at all (Settings toggle). Off hides the Home
   // card and the /checkin route; the saved gymCards stay so turning it back on restores them.
-  // Defaults on; an older profile without the key reads as on (`!== false`).
-  checkIn: true,
+  // Level: off by default (nobody in the group uses membership codes); a profile turns it on in
+  // Settings → Modules. A profile without the key reads as off.
+  checkIn: false,
   // Whether the body-weight summary card is shown on Home. Off only hides that card: existing
   // entries, Stats, imports and the separate pre-workout weigh-in flow keep working.
   // Defaults on; an older profile without the key reads as on (`!== false`).

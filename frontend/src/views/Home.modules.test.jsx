@@ -35,10 +35,10 @@ const mountWith = (modules, extra = {}) => {
 const heads = () => [...host.querySelectorAll('.card-head-title')].map(el => el.textContent)
 
 describe('Home follows the modules', () => {
-  it('Everything: the weight card, the check-in and the streak are there', () => {
+  it('Everything: the weight card and the streak are there, the check-in is off by default', () => {
     mountWith(undefined)
     expect(heads()).toContain('Body weight')
-    expect(heads()).toContain('Check in')
+    expect(heads()).not.toContain('Check in')
     expect(heads().some(h => /week streak/.test(h))).toBe(true)
   })
 
@@ -52,7 +52,7 @@ describe('Home follows the modules', () => {
   })
 
   it('one module at a time, and back on brings it back', () => {
-    mountWith({ body: false })
+    mountWith({ body: false, checkin: true })
     expect(heads()).not.toContain('Body weight')
     expect(heads()).toContain('Check in')
     mountWith({ body: true, checkin: false })
